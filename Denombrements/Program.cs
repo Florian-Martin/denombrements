@@ -6,15 +6,27 @@
  * date dernière modification : 31/03/2022
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Denombrements
 {
     class Program
     {
+        /// <summary>
+        /// Calcul du produit de plusieurs entiers successifs, de valeurDepart à valeurArrivee
+        /// </summary>
+        /// <param name="valeurDepart">valeur de départ du calcul</param>
+        /// <param name="valeurArrivee">valeur d'arrivée du calcul</param>
+        /// <returns>résultat du produit ou 0 si dépassement de capacité</returns>
+        static long ProduitEntiers(int valeurDepart, int valeurArrivee)
+        {
+            long produit = 1;
+            for (int k = valeurDepart; k <= valeurArrivee; k++)
+            {
+                produit *= k;
+            }
+            return produit;
+        }
+
         /// <summary>
         /// Menu permettant de faire, plusieurs fois, 3 calculs : permutation, arrangement, combinaison
         /// </summary>
@@ -30,83 +42,44 @@ namespace Denombrements
                 Console.WriteLine("Quitter .......................... 0");
                 Console.Write("Choix :                            ");
                 choix = Console.ReadLine();
-
-                if (choix == "0")
+                // choix correct excluant le choix de quitter
+                if (choix == "1" || choix == "2" || choix == "3")
                 {
-                    Environment.Exit(0);
-                }
-
-                try
-                {
-                    if (choix == "1")
+                    try
                     {
-                        // le nombre d'éléments à gérer
                         Console.Write("nombre total d'éléments à gérer = ");
-                        // saisir le nombre
-                        int n = int.Parse(Console.ReadLine());
-                        // calcul de r
-                        long r = 1;
-                        for (int k = 1; k <= n; k++)
+                        int nbTotal = int.Parse(Console.ReadLine());
+                        // choix : permutation
+                        if (choix == "1")
                         {
-                            r *= k;
-                        }
-                        Console.WriteLine(n + "! = " + r);
-                    }
-                    else
-                    {
-                        if (choix == "2")
-                        {
-                            // le nombre d'éléments à gérer
-                            Console.Write("nombre total d'éléments à gérer = ");
-                            // saisir le nombre
-                            int t = int.Parse(Console.ReadLine());
-                            // le sous ensemble
-                            Console.Write("nombre d'éléments dans le sous ensemble = ");
-                            // saisir le nombre
-                            int n = int.Parse(Console.ReadLine()); 
-                            // calcul de r
-                            long r = 1;
-                            for (int k = (t - n + 1); k <= t; k++)
-                            {
-                                r *= k;
-                            }
-                            //Console.WriteLine("résultat = " + (r1 / r2));
-                            Console.WriteLine("A(" + t + "/" + n + ") = " + r);
+                            long permutation = ProduitEntiers(1, nbTotal);
+                            Console.WriteLine(nbTotal + "! = " + permutation);
                         }
                         else
                         {
-                            // le nombre d'éléments à gérer
-                            Console.Write("nombre total d'éléments à gérer = ");
-                            // saisir le nombre
-                            int t = int.Parse(Console.ReadLine());
-                            // le sous ensemble
                             Console.Write("nombre d'éléments dans le sous ensemble = ");
-                            // saisir le nombre
-                            int n = int.Parse(Console.ReadLine()); 
-                            // calcul de r1
-                            long r1 = 1;
-                            for (int k = (t - n + 1); k <= t; k++)
+                            int nbSousEnsenble = int.Parse(Console.ReadLine());
+                            // calcul de l'arrangement qui sert aussi au calcul de la combinaison
+                            long arrangement = ProduitEntiers(nbTotal - nbSousEnsenble + 1, nbTotal);
+                            // choix : arrangement
+                            if (choix == "2")
                             {
-                                r1 *= k;
+                                Console.WriteLine("A(" + nbTotal + "/" + nbSousEnsenble + ") = " + arrangement);
                             }
-                            // calcul de r2
-                            long r2 = 1;
-                            for (int k = 1; k <= n; k++)
+                            // choix : combinaison
+                            else
                             {
-                                r2 *= k;
+                                long combinaison = arrangement / ProduitEntiers(1, nbSousEnsenble);
+                                Console.WriteLine("C(" + nbTotal + "/" + nbSousEnsenble + ") = " + combinaison);
                             }
-                            // calcul de r3
-                            //Console.WriteLine("résultat = " + (r1 / r2));
-                            Console.WriteLine("C(" + t + "/" + n + ") = " + (r1 / r2));
                         }
                     }
-                }
-                catch
-                {
-                    Console.WriteLine("Calcul impossible: valeur trop grande.");
+                    catch
+                    {
+                        Console.WriteLine("Calcul impossible : valeur(s) incorrecte(s) ou trop grande(s).");
+                    }
                 }
             }
-            Console.ReadLine();
         }
     }
 }
